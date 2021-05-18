@@ -1,6 +1,6 @@
-#Vinted web scraper
+#The New and improved Vinted web scraper
 
-The scrape and store module contains files that allow for data to be scraped from Vinted and then stored in a Postgre SQL database.
+The scrape and store directory contains files that allow for data to be scraped from Vinted and then stored in a Postgre SQL database. It also contains the geckodriver needed for selenium to run Firefox and scrape the data
 
 Here's an example for how to use this module and the functions in it: 
  
@@ -12,16 +12,11 @@ items = ["boots", "trousers", "pendant"]`
 This function then creates a table in the database that keeps track of the item types.
 
 ```python
-store.item_types_table(items[0], items[1], items[2])
+store.item_types_table(itmes)
 ```
 
 ```python
-for index, item in enumerate(items):
-    store.make_table(item)
-    data = scrape.scrape(item, 3000, index+1)
-    scrape.make_csv(item, data)
-    con = store.connect()
-    store.copy_from_df(con, item, item)
+INSERT EXAMPLE CODE HERE
 ```
 
 The above for loop goes through each item in the list. It first makes a corresponding table in the database. 
