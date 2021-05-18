@@ -8,16 +8,20 @@ import pandas as pd
 
 
 def browser_setup(keyword: str):
-    options = Options()
-    options.headless = True
-    caps = DesiredCapabilities().FIREFOX
-    caps["marionette"] = True
-    driver = webdriver.Firefox(capabilities=caps, options=options,
-                               executable_path=r"scrape_and_store/geckodriver-v0.29.1-win64/geckodriver.exe")
-    actions = ActionChains(driver)
+    wd = webdriver.Remote(desired_capabilities={
+        "browserName": "firefox",
+        "marionette": "True"
+    })
+    # options = Options()
+    # options.headless = True
+    # caps = DesiredCapabilities().FIREFOX.copy()
+    # caps["marionette"] = True
+    # driver = webdriver.Firefox(capabilities=caps, options=options,
+    #                            executable_path=r"scrape_and_store/geckodriver-v0.29.1-win64/geckodriver.exe")
+    # actions = ActionChains(driver)
     url = "https://www.vinted.co.uk/vetements?search_text="
     # adjusts the link to go to the correct page
-    browser = driver.get(url + keyword)
+    browser = wd.get(url + keyword)
     return browser
 
 

@@ -1,6 +1,5 @@
-# from scrape_and_store import scrape
-# from scrape_and_store import store
-
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 def main():
     print("Hello and welcome to Vinted web Scraper")
