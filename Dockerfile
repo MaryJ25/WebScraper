@@ -1,43 +1,38 @@
-FROM ubuntu:17.10
-ENV LC_ALL C
-ENV DEBIAN_FRONTEND noninteractive
-ENV DEBCONF_NONINTERACTIVE_SEEN true
+FROM ubuntu:bionic
 
-MAINTAINER Maria Capkovska <mariajczapkowska@protonmail.com>
-USER root
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip \
+    fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 \
+    libnspr4 libnss3 lsb-release xdg-utils libxss1 libdbus-glib-1-2 \
+    curl unzip wget \
+    xvfb
+
 # Install dependencies
-RUN apt-get -qqy update
-RUN apt-get -qqy --no-install-recommends install \
-  wget \
-  firefox \
-  x11vnc \
-  xvfb \
-  xfonts-100dpi \
-  xfonts-75dpi \
-  xfonts-scalable \
-  xfonts-cyrillic \
-  openjdk-8-jre-headless \
-  python3-pip \
-  curl \
-  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+RUN GECKODRIVER_VERSION=`curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+'` && \
+    wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz && \
+    tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin && \
+    chmod +x /usr/local/bin/geckodriver && \
+    rm geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+
+RUN FIREFOX_SETUP=firefox-setup.tar.bz2 && \
+    apt-get purge firefox && \
+    wget -O $FIREFOX_SETUP "https://download.mozilla.org/?product=firefox-latest&os=linux64" && \
+    tar xjf $FIREFOX_SETUP -C /opt/ && \
+    ln -s /opt/firefox/firefox /usr/bin/firefox && \
+    rm $FIREFOX_SETUP
+
 RUN pip3 install selenium
 RUN pip3 install gunicorn
 RUN pip3 install numpy
 RUN pip3 install pandas
 RUN pip3 install psycopg2
 RUN pip3 install time
-# Create user for use selenium-server-standalone
-RUN useradd -d /home/seleuser -m seleuser
-RUN mkdir -p /home/seleuser/chrome
-RUN chown -R seleuser /home/seleuser
-RUN chgrp -R seleuser /home/seleuser
-
-RUN wget http://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.0.jar \
-  && mv selenium-server-standalone-*.jar /home/seleuser/selenium-server-standalone.jar
-RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.29.1/geckodriver-v0.29.1-linux64.tar.gz -O /tmp/geckodriver.tar.gz \
-  && tar -xzf /tmp/geckodriver.tar.gz -C /usr/bin && rm -rf /tmp/geckodriver.tar.gz
 
 # Run at begin
-ADD ./scripts/ /home/root/scripts
-EXPOSE 4444 5999
-CMD ["sh", "/home/root/scripts/start.sh"]
+ENV APP_HOME /usr/src/app
+WORKDIR /$APP_HOME
+
+COPY . $APP_HOME/
+
+CMD tail -f /dev/null
+CMD python3 main.py
