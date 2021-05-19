@@ -8,14 +8,15 @@ import pandas as pd
 
 
 def browser_setup(keyword: str):
-    wd = webdriver.Remote(desired_capabilities={
-        "browserName": "firefox",
-        "marionette": "True",
-        "platform": "LINUX"
-    })
+    options = Options()
+    options.headless = True
+    capabilities = DesiredCapabilities().FIREFOX
+    capabilities["marionette"] = True
+    driver = webdriver.Firefox(capabilities=capabilities, options=options)
+    actions = ActionChains(driver)
     url = "https://www.vinted.co.uk/vetements?search_text="
     # adjusts the link to go to the correct page
-    browser = wd.get(url + keyword)
+    browser = driver.get(url + keyword)
     return browser
 
 
