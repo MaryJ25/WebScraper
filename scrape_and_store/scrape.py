@@ -29,8 +29,8 @@ def dataframe_setup():
 def scrape(items: list, quantity: int):
     """
     This function will scrape the titles, prices, item links and image links of a requested category of items.
-    Provide a list of categories in place of the items parameter and a number of items to find in place of quantity parameter.
-    When finished the function produces a pandas dataframe containing all the data.
+    Provide a list of categories in place of the items parameter and a number of items to find in place of quantity
+    parameter. When finished the function produces a pandas dataframe containing all the data.
     """
     df = dataframe_setup()
     for i in items:
