@@ -21,6 +21,11 @@ RUN apt-get -qqy --no-install-recommends install \
   curl \
   && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 RUN pip3 install selenium
+RUN pip3 install gunicorn
+RUN pip3 install numpy
+RUN pip3 install pandas
+RUN pip3 install psycopg2
+RUN pip3 install time
 # Create user for use selenium-server-standalone
 RUN useradd -d /home/seleuser -m seleuser
 RUN mkdir -p /home/seleuser/chrome
