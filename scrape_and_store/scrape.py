@@ -75,12 +75,16 @@ def scrape(items: list, quantity: int):
 
         # stores the information in a dataframe
         items_df = pd.DataFrame(all_items).T
-        df.append(items_df)
+        mapping = {items_df.columns[0]:'title', items_df.columns[1]: 'price',
+                   items_df.columns[2]:'item_link', items_df.columns[3]: 'image_link'}
+
+        items_df = items_df.rename(columns=mapping)
+        final_df = df.append(items_df, ignore_index=True)
         category = f"{i}"
-        df["item_type"] = df["item_type"].fillna(value=category)
+        final_df["item_type"] = final_df["item_type"].fillna(value=category)
         driver.quit()
 
-    return df
+    return final_df
 
 
 def make_csv(name: str, df):
