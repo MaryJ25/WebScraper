@@ -25,8 +25,7 @@ RUN pip3 install selenium
 RUN pip3 install gunicorn
 RUN pip3 install numpy
 RUN pip3 install pandas
-RUN pip3 install psycopg2
-RUN pip3 install time
+RUN pip3 install psycopg2-binary
 
 # Run at begin
 ENV APP_HOME /usr/src/app
