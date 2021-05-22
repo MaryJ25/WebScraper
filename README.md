@@ -1,6 +1,13 @@
-#The New and improved Vinted web scraper
+# The New and improved Vinted web scraper
 
-The scrape and store directory contains files that allow for data to be scraped from Vinted and then stored in a Postgre SQL database. It also contains the geckodriver needed for selenium to run Firefox and scrape the data
+The scrape and store directory contains files that allow for data to be scraped from Vinted and then stored in a Postgre SQL database. The project is made to run through Docker.
+
+To run in Docker:
+
+```
+
+
+```
 
 Here's an example for how to use this module and the functions in it: 
  
