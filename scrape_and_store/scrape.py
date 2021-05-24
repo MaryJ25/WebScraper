@@ -7,19 +7,7 @@ from time import sleep
 import pandas as pd
 import os
 
-
-def browser_setup(keyword: str):
-    options = Options()
-    options.add_argument('-headless')
-    driver = Firefox(executable_path='geckodriver', options=options)
-
-    url = "https://www.vinted.co.uk/vetements?search_text="
-    # adjusts the link to go to the correct page
-    browser = driver.get(url + keyword)
-    if browser is not None:
-        return browser
-    else:
-        print("this is broken shit")
+URL = "https://www.vinted.co.uk/vetements?search_text="
 
 
 def dataframe_setup():
@@ -34,9 +22,13 @@ def scrape(items: list, quantity: int):
     Provide a list of categories in place of the items parameter and a number of items to find in place of quantity
     parameter. When finished the function produces a pandas dataframe containing all the data.
     """
+    options = Options()
+    options.add_argument('-headless')
+    driver = Firefox(executable_path="geckodriver", options=options)
+
     df = dataframe_setup()
     for i in items:
-        driver = browser_setup(i)
+        driver.get(URL + i)
         all_items = []
         all_titles_list = []
         all_prices_list = []
@@ -84,8 +76,8 @@ def scrape(items: list, quantity: int):
         final_df = df.append(items_df, ignore_index=True)
         category = f"{i}"
         final_df["item_type"] = final_df["item_type"].fillna(value=category)
-        driver.quit()
 
+    driver.quit()
     return final_df
 
 
