@@ -1,7 +1,13 @@
 import sys
-from database_credentials import *
 import psycopg2
 from psycopg2 import OperationalError, errorcodes, errors
+
+
+DATABASE = ""
+USER = ""
+PASSWORD = ""
+HOST = ""
+PORT = ""
 
 
 def show_psycopg2_exception(err):
@@ -81,7 +87,7 @@ def all_items_table():
         try:
             cursor = connection.cursor()
             cursor.execute("DROP TABLE IF EXISTS all_items")
-            string_execute = f'''CREATE TABLE all_items (
+            cursor.execute('''CREATE TABLE all_items (
             id SERIAL PRIMARY KEY,
             title varchar(100) DEFAULT 'brand unknown',
             price varchar(50),
@@ -92,8 +98,7 @@ def all_items_table():
                 FOREIGN KEY (type)
                     REFERENCES types (type)
                     ON DELETE CASCADE
-            );'''
-            cursor.execute(string_execute)
+            );''')
             print(f"Table all_items created successfully")
             cursor.close()
             connection.close()
@@ -118,7 +123,9 @@ def item_types_table(types: list):
             cursor.execute("DROP TABLE IF EXISTS types")
             cursor.execute('''CREATE TABLE types (
             id SERIAL PRIMARY KEY,
-            type varchar(100) 
+            type varchar(100), 
+            
+            UNIQUE(type)
             );''')
             print("Table types created successfully")
             for i in types:
