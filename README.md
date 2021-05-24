@@ -8,9 +8,14 @@ To run in Docker:
 docker build -t web_scraper .
 docker run --privileged -p 4000:4000 -d -it web_scraper 
 ```
+## Requirement
+Databasse credentials need to be inserted in the store.py file for the program to work. 
 
-Here's an example for how to use this module and the functions in it: 
- 
+## How it works
+Running the container will initialise the code in main.py file.
+
+Here's how it works:
+
 This is a list of items we want to look for on Vinted. The list can have any number of items.
 
 ```python
@@ -25,9 +30,13 @@ This will get the data. Data collected will be the name of product, price, link 
 ```python
 data = scrape.scrape(items, 3000)
 ```
-The data needs to be saved to a csv and then uploaded using:
+The following function will then save the data to a csv file named all_items
 ```python
 scrape.make_csv("all_items", data)
 ```
 
-The data is put into a csv file and then copied to the database table.
+Then uploaded to the database using:
+```python
+store.copy_from_csv()
+```
+
