@@ -21,18 +21,12 @@ def items_to_scrape():
 
 
 def main():
-    print("Hello and welcome to Vinted web Scraper")
-    print("It's not pretty or fast, but it does the job")
-    answer = "N"
-    while answer == "N":
-        items = items_to_scrape()
-        print("The items that will be scraped are: ")
-        print(items)
-        answer = input("Are you happy with this selection? Y/N \n").upper()
-        if answer != "Y" or answer != "N":
-            pass
-
-    print("lets begin")
+    items = ["boots", "trousers", "pendant"]
+    store.item_types_table(items)
+    store.all_items_table()
+    data = scrape.scrape(items, 100)
+    scrape.make_csv("all_items", data)
+    store.copy_from_csv()
 
 
 main()

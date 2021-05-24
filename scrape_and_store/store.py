@@ -22,7 +22,7 @@ def show_psycopg2_exception(err):
     print("pgcode:", err.pgcode, "\n")
 
 
-def connect(database: str, user: str, password: str, host: str, port: str):
+def connect(database: str = DATABASE, user: str = USER, password: str = PASSWORD, host: str = HOST, port: str = PORT):
     """
     The function will attempt to establish a connection with the database and return the connection if successful.
     If unsuccessful the error will be shown.
@@ -32,8 +32,8 @@ def connect(database: str, user: str, password: str, host: str, port: str):
     try:
         print("Establishing a connection with the database...")
         connection = psycopg2.connect(
-            database=database,
             user=user,
+            database=database,
             password=password,
             host=host,
             port=port
@@ -48,27 +48,29 @@ def connect(database: str, user: str, password: str, host: str, port: str):
     return connection
 
 
-def copy_from_df(connection, data, table):
+def copy_from_csv():
     """
     This function will upload the data from a csv file into a postgresql table.
-    The connection, csv file and the table name need to be provided.
+    csv file and the table name need to be provided.
     If the function is unsuccessful the error will be shown.
     """
-    string_execute = f"{data}.csv"
-    with open(string_execute) as csv:
-        cursor = connection.cursor()
-        try:
-            cursor.copy_from(csv, table, sep=";")
-            connection.commit()
-            print("Data uploaded successfully")
-            cursor.close()
-            connection.close()
-        except (Exception, psycopg2.DatabaseError) as err:
-            show_psycopg2_exception(err)
-            cursor.close()
+    connection = connect()
+    string_execute = f"all_items.csv"
+    with open("all_items.csv") as csv:
+        if connection is not None:
+            connection.autocommit = True
+            cursor = connection.cursor()
+            try:
+                cursor.copy_from(csv, "all_items", sep=";")
+                print("Data uploaded successfully")
+                cursor.close()
+                connection.close()
+            except (Exception, psycopg2.DatabaseError) as err:
+                show_psycopg2_exception(err)
+                cursor.close()
 
 
-def make_table(keyword: str):
+def all_items_table():
     """
     The function will create a table for one category of items. The table has an ID, item title, price, item link,
      image link and type. The type column is used as a reference to the types table.
@@ -78,8 +80,8 @@ def make_table(keyword: str):
         connection.autocommit = True
         try:
             cursor = connection.cursor()
-            cursor.execute("DROP TABLE IF EXISTS " + keyword)
-            string_execute = f'''CREATE TABLE {keyword} (
+            cursor.execute("DROP TABLE IF EXISTS all_items")
+            string_execute = f'''CREATE TABLE all_items (
             id SERIAL PRIMARY KEY,
             title varchar(100) DEFAULT 'brand unknown',
             price varchar(50),
@@ -92,7 +94,7 @@ def make_table(keyword: str):
                     ON DELETE CASCADE
             );'''
             cursor.execute(string_execute)
-            print(f"Table {keyword} created successfully")
+            print(f"Table all_items created successfully")
             cursor.close()
             connection.close()
 
