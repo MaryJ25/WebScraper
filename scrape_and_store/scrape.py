@@ -3,23 +3,11 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import NoSuchElementException
-from pyvirtualdisplay import Display
 from time import sleep
 import pandas as pd
 
 
 def browser_setup(keyword: str):
-
-    display = Display(visible=0, size=(800, 600))
-    display.start()
-    firefox_profile = webdriver.FirefoxProfile()
-    firefox_profile.set_preference('browser.download.folderList', 2)
-    firefox_profile.set_preference('browser.download.manager.showWhenStarting', False)
-    firefox_profile.set_preference('browser.download.dir', os.getcwd())
-    firefox_profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'text/csv')
-    browser = webdriver.Firefox(firefox_profile=firefox_profile)
-
-
     options = Options()
     options.headless = True
     capabilities = DesiredCapabilities().FIREFOX
