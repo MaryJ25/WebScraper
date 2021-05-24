@@ -22,8 +22,8 @@ def items_to_scrape():
 
 def main():
     items = ["boots", "trousers", "pendant"]
-    store.item_types_table(items)
-    store.all_items_table()
+    #store.item_types_table(items)
+    #store.all_items_table()
     data = scrape.scrape(items, 100)
     scrape.make_csv("all_items", data)
     store.copy_from_csv()

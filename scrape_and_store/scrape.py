@@ -1,23 +1,25 @@
-from selenium import webdriver
+from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import NoSuchElementException
 from time import sleep
 import pandas as pd
+import os
 
 
 def browser_setup(keyword: str):
     options = Options()
-    options.headless = True
-    capabilities = DesiredCapabilities().FIREFOX
-    capabilities["marionette"] = True
-    driver = webdriver.Firefox(capabilities=capabilities, options=options)
-    actions = ActionChains(driver)
+    options.add_argument('-headless')
+    driver = Firefox(executable_path='geckodriver', options=options)
+
     url = "https://www.vinted.co.uk/vetements?search_text="
     # adjusts the link to go to the correct page
     browser = driver.get(url + keyword)
-    return browser
+    if browser is not None:
+        return browser
+    else:
+        print("this is broken shit")
 
 
 def dataframe_setup():
@@ -75,8 +77,8 @@ def scrape(items: list, quantity: int):
 
         # stores the information in a dataframe
         items_df = pd.DataFrame(all_items).T
-        mapping = {items_df.columns[0]:'title', items_df.columns[1]: 'price',
-                   items_df.columns[2]:'item_link', items_df.columns[3]: 'image_link'}
+        mapping = {items_df.columns[0]: 'title', items_df.columns[1]: 'price',
+                   items_df.columns[2]: 'item_link', items_df.columns[3]: 'image_link'}
 
         items_df = items_df.rename(columns=mapping)
         final_df = df.append(items_df, ignore_index=True)
