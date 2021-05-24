@@ -5,7 +5,6 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import NoSuchElementException
 from time import sleep
 import pandas as pd
-import os
 
 URL = "https://www.vinted.co.uk/vetements?search_text="
 
@@ -26,7 +25,7 @@ def scrape(items: list, quantity: int):
     options.add_argument('-headless')
     driver = Firefox(executable_path="geckodriver", options=options)
 
-    df = dataframe_setup()
+    final_df = dataframe_setup()
     for i in items:
         driver.get(URL + i)
         all_items = []
@@ -73,8 +72,9 @@ def scrape(items: list, quantity: int):
                    items_df.columns[2]: 'item_link', items_df.columns[3]: 'image_link'}
 
         items_df = items_df.rename(columns=mapping)
-        final_df = df.append(items_df, ignore_index=True)
         category = f"{i}"
+
+        final_df = final_df.append(items_df, ignore_index=True)
         final_df["item_type"] = final_df["item_type"].fillna(value=category)
 
     driver.quit()
