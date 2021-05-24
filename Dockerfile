@@ -37,7 +37,6 @@ RUN pip3 install gunicorn
 RUN pip3 install numpy
 RUN pip3 install pandas
 RUN pip3 install psycopg2-binary
-RUN pip3 install pyvirtualdisplay
 
 # Run at begin
 ENV APP_HOME /usr/src/app
